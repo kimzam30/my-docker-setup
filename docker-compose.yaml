@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  # 1. Homepage (Your Dashboard)
+  homepage:
+    image: gethomepage/homepage:latest
+    container_name: homepage
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    restart: always
+
+  # 2. File Browser (NAS Interface)
+  filebrowser:
+    image: filebrowser/filebrowser
+    container_name: filebrowser
+    user: "${PUID}:${PGID}"
+    ports:
+      - "8080:80"
+    volumes:
+      - ${NAS_ROOT}:/srv               # The actual storage folder on your host
+      - ./config/filebrowser/filebrowser.db:/database.db
+      - ./config/filebrowser/settings.json:/.filebrowser.json
+    restart: unless-stopped
+
+  # 3. Nginx (Reverse Proxy)
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - homepage
+      - filebrowser
+    restart: always
+
+  # 4. Uptime Kuma (Monitoring)
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    ports:
+      - "3001:3001"
+    volumes:
+      - uptime-kuma-data:/app/data
+    restart: always
+
+volumes:
+  uptime-kuma-data:

@@ -1,0 +1,15 @@
+# Secrets and sensitive files
+.env
+*.key
+*.pem
+*.Secrets
+
+#Database
+*.db
+*.sqlite
+filebrowser.db
+
+#System files
+.DS_Store
+Thumbs.db
+.vscode/

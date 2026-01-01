@@ -1,0 +1,65 @@
+services:
+  # 1. THE GATEKEEPER (Nginx) - Listens on Port 80
+  nginx:
+    image: nginx:latest
+    container_name: master-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - homepage
+
+ # 2. THE DASHBOARD (Homepage)
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    # ADD THIS SECTION BELOW:
+    environment:
+      HOMEPAGE_VAR_ALLOWED_HOSTS: "*" 
+      HOMEPAGE_ALLOWED_HOSTS: "*"
+    volumes:
+      - ./homepage_config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "3000:3000"
+
+  # 3. PI-HOLE (AdBlocker) - Web Port moved to 8080
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    restart: unless-stopped
+    environment:
+      TZ: 'Asia/Kuala_Lumpur'
+      WEBPASSWORD: 'CHANGE_ME'  # <--- Login password
+      WEB_PORT: 8080        # Key fix: Moves Pi-hole web to 8080
+    volumes:
+      - ./etc-pihole:/etc/pihole
+      - ./etc-dnsmasq.d:/etc/dnsmasq.d
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8082:80" 
+
+  # 4. UPTIME KUMA (Monitor) - Port 3001
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: unless-stopped
+    volumes:
+      - ./uptime-kuma-data:/app/data
+    ports:
+      - "3001:3001"
+
+  # 5. FILE BROWSER - Port 8081
+  filebrowser:
+    image: filebrowser/filebrowser
+    container_name: filebrowser
+    restart: unless-stopped
+    volumes:
+      - C:/PATHTOURFILES      
+      - ./filebrowser.db:/database.db
+    ports:
+      - "8081:80"

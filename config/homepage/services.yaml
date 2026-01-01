@@ -1,0 +1,30 @@
+---
+# GROUP 1: Network Admin
+- Network:
+    - Pi-hole:
+        icon: pi-hole.png
+        href: http://YOURTAILSCALEIP/admin
+        description: Ad Blocker & DNS
+        pihole_api_key: "PASTE_YOUR_LONG_API_KEY_HERE"
+        version: "v5 or v6  # depending on your Pi-hole version"
+    - Uptime Kuma:
+        icon: uptime-kuma.png
+        href: http://YOURTAILSCALEIP:3001
+        description: Server Status Monitor
+
+# GROUP 2: Tools
+- My Server:
+    - File Browser:
+        icon: filebrowser.png
+        href: http://YOURTAILSCALEIP:8081
+        description: Access C:/Users
+    - Terminal:
+        icon: terminal.png
+        href: #
+        description: SSH via VS Code
+
+# GROUP 3: widgets
+- widget:
+    type: pihole
+    url: http://pihole:80 # Internal docker address
+    key: "PASTE_YOUR_LONG_API_KEY_HERE"

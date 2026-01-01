@@ -1,0 +1,40 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/settings/
+
+title: My HomeLab
+
+# 1. Background Image
+# Place your image in: config/homepage/images/my-wallpaper.jpg
+background:
+  image: /images/my-wallpaper.jpg
+  blur: sm    # Options: sm, md, xl, etc.
+  opacity: 50 # 0 to 100
+
+# 2. Theme & Colors
+theme:
+  default: dark
+  colors:
+    light:
+      highlight-hover: slate-700
+    dark:
+      highlight-hover: rose-600 # Changes the hover color to a nice red
+
+# 3. Header Customization
+header:
+  showGreeting: true
+  message: "System Online"
+  search:
+    provider: google
+    target: _blank # Opens search results in a new tab
+
+# 4. Layout
+layout:
+  # This organizes your services into columns.
+  # "Network" and "My Server" are the group names from services.yaml
+  Network:
+    style: row
+    columns: 4
+  "My Server":
+    style: row
+    columns: 2
